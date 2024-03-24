@@ -259,6 +259,16 @@ void printPaths(EdgeList** paths, int numVertices) {
  * lists.
  */
 void freePaths(EdgeList** paths, int numVertices) {
-  if (paths == NULL) return;
-  for (int i = 0; i < numVertices; i++) deleteEdgeList(paths[i]);
+  // this fixes the issue where it was complaing at the end of your program saying: free(): invalid pointer
+  // what this does is iterates through and frees EACH edge list without missing anything.
+    if (paths == NULL) return;
+    for (int i = 0; i < numVertices; i++) {
+        EdgeList* current = paths[i];
+        while (current != NULL) {
+            EdgeList* temp = current;
+            current = current->next;
+            free(temp); 
+        }
+        paths[i] = NULL; 
+    }
 }

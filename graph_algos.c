@@ -183,57 +183,58 @@ void setPred(MinHeap* heap, int id, int pred) {
   heap->arr[heap->indexMap[id]].pred = pred;
 }
 
-EdgeList* getMSTprim(Graph* graph, int startVertex) {
-  // Create a container for edges
-  EdgeList* T = NULL;
+// The previous implementation for this was wrong as it was not returning the correct weight
+// the implementation below works but adjust it according to ur needs. i followed some youtube videos/docs for this.
+Edge* getMSTprim(Graph* graph, int startVertex) {
+    int numVertices = graph->numVertices;
+    Edge* mst = malloc((numVertices - 1) * sizeof(Edge));
 
-  // Create a min-heap
-  MinHeap* PQ = newHeap(graph->numVertices);
-
-  // Insert startVertex with priority 0 into PQ
-  insert(PQ, 0, startVertex);
-
-  // Insert all other vertices into PQ with priority infinity
-  for (int v = 0; v < graph->numVertices; v++) {
-    if (v != startVertex) {
-      insert(PQ, INT_MAX, v);
-    }
-  }
-
-  // Main loop
-  while (!isEmpty(PQ)) {
-    // Extract the node with minimum priority from PQ
-    HeapNode u = extractMin(PQ);
-
-    // Add the edge (u.pred, u) to T
-    if (u.pred != -1) {
-      Edge* edge = newEdge(u.pred, u.id, getPriority(PQ, u.id));
-      T = newEdgeList(edge, T);
+    MinHeap* heap = newHeap(numVertices);
+    int* parentVertices = malloc(numVertices * sizeof(int));
+    int* minEdges = malloc(numVertices * sizeof(int));
+    bool* inMST = calloc(numVertices, sizeof(bool));
+  
+    for (int v = 0; v < numVertices; ++v) {
+        minEdges[v] = INT_MAX;
+        inMST[v] = false;
+        insert(heap, minEdges[v], v);
     }
 
-    // Update priorities of adjacent vertices
-    EdgeList* adjList = graph->vertices[u.id]->adjList;
-    while (adjList != NULL) {
-      int v = adjList->edge->toVertex;
-      int weight = adjList->edge->weight;
+    minEdges[startVertex] = 0;
+    decreasePriority(heap, startVertex, minEdges[startVertex]);
+    parentVertices[startVertex] = -1;
 
-      // Check if v is in PQ and w(u, v) < priority(v), then PQ.decrease-priority(v, w(u,v)) and set v.pred := u
-      if (isInMinHeap(PQ, v) && weight < getPriority(PQ, v)) {
-        decreasePriority(PQ, v, weight);
-        setPred(PQ, v, u.id);
-      }
+    for (int i = 0; i < numVertices - 1; ++i) {
+        int u = extractMin(heap).id;
+        inMST[u] = true;
 
-      adjList = adjList->next;
+        for (EdgeList* adj = graph->vertices[u]->adjList; adj != NULL; adj = adj->next) {
+            int v = adj->edge->toVertex;
+            int weight = adj->edge->weight;
+
+            if (!inMST[v] && weight < minEdges[v]) {
+                parentVertices[v] = u;
+                minEdges[v] = weight;
+                decreasePriority(heap, v, minEdges[v]);
+            }
+        }
     }
-  }
 
-  // Free the min-heap
-  deleteHeap(PQ);
+    int totalWeight = 0;
+    for (int i = 1; i < numVertices; ++i) {
+        if (parentVertices[i] >= 0) {
+            mst[i - 1] = (Edge){parentVertices[i], i, minEdges[i]};
+            totalWeight += minEdges[i];
+        }
+    }
 
-  // Return the resulting MST
-  return T;
+    free(parentVertices);
+    free(minEdges);
+    free(inMST);
+    deleteHeap(heap);
+
+    return mst;
 }
-
 /* Runs Dijkstra's algorithm on Graph 'graph' starting from vertex with ID
  * 'startVertex', and return the resulting distance tree: an array of edges.
  * Returns NULL if 'startVertex' is not valid in 'graph'.

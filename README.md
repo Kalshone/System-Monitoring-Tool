@@ -28,13 +28,12 @@ This is Assignment 3 for CSCB09. This project is a simple tool that displays the
 
 4. The program will then run and display the system stats.
 
-## Table of contents
-<!-- 
+## Table of contents 
 - [Overview](#overview)
   - [Built with](#built-with)
   - [Function insights](#function-insights)
   - [Continued development](#continued-development)
-- [Author](#author) -->
+- [Author](#author) 
 
 ## Overview
 

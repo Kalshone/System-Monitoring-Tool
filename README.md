@@ -6,7 +6,7 @@ This project is a simple tool that displays the CPU and memory usage of a system
 ## Running the files
 
 1. To run the files, you will need to compile the code in your compiler of choice:
-    [compiler of choice] mySystemStats.c
+    ex. gcc mySystemStats.c
 2. Then, you will need to run the executable file:
     ./a.out
 

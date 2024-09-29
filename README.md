@@ -1,7 +1,7 @@
 
 ## Welcome!
 
-This is Assignment 3 for CSCB09. This project is a simple tool that displays the CPU and memory usage of a system, as well as other information.
+This project is a simple tool that displays the CPU and memory usage of a system, as well as other information.
 
 ## Running the files
 
@@ -79,9 +79,8 @@ handle_sigtstp() - This function handles the SIGTSTP signal, which is sent when 
 
 ### Continued development
 
-After finishing this project, I am looking forward to the next assigments and the challenges they may bring. 
+After finishing this project, I look forward to the next challenge. 
 
 ## Author
 
 - LinkedIn - [Katherine Pravdin](https://www.linkedin.com/in/katherinepravdin)
-- GitHub - [Kalshone](https://www.github.com/kalshone/)
